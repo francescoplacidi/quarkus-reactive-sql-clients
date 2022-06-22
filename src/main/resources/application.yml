@@ -1,0 +1,7 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: postgres
+    password: password
+    reactive:
+      url: postgresql://localhost:5432/my_db
