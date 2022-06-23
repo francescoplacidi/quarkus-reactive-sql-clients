@@ -39,9 +39,8 @@ public class MovieResource {
                         "INSERT INTO movies (title) VALUES('Harry Potter')").execute())
                 .flatMap(m -> client.query(
                         "INSERT INTO movies (title) VALUES('Soul')").execute())
-                .subscribe().with(
-                        result -> log.info("Last insertion: {}", result.size()),
-                        failure -> log.error("Failed!: {}", failure));
+                .await()
+                .indefinitely();
         log.info("DB initialized!");
     }
 
