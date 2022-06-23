@@ -4,6 +4,21 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Thread problem
+
+The application starts with a DB initialization. The instruction
+
+```java
+await().indefinitely()
+```
+fails with 
+
+```shell script
+java.lang.IllegalStateException: The current thread cannot be blocked: vert.x-eventloop-thread-1
+        at io.smallrye.mutiny.operators.uni.UniBlockingAwait.await(UniBlockingAwait.java:30)
+```
+So, I use, instead of await, a subscription. This solution causes, randomly, the error "table movies not found" on first call.
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
