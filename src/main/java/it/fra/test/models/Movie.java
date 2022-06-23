@@ -18,9 +18,13 @@ public class Movie {
     private String title;
 
     public static Multi<Movie> findAll(PgPool client) {
-        return client.query("SELECT id, title FROM movies ORDER BY title DESC").execute()
-                .onItem().transformToMulti(set -> Multi.createFrom().iterable(set))
-                .onItem().transform(Movie::fromRow);
+        return client
+            .query("SELECT id, title FROM movies ORDER BY title DESC")
+            .execute()
+            .onItem()
+            .transformToMulti(set -> Multi.createFrom().iterable(set))
+            .onItem()
+            .transform(Movie::fromRow);
     }
 
     public static Movie fromRow(Row row) {
