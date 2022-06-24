@@ -1,6 +1,8 @@
 package it.fra.test.resources;
 
+import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.panache.common.Sort;
+import io.smallrye.common.constraint.NotNull;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
@@ -28,6 +30,7 @@ import static javax.ws.rs.core.Response.Status;
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@SuppressWarnings("squid:S3252")
 public class MovieResource {
 
     @GET
@@ -35,24 +38,21 @@ public class MovieResource {
         return Movie.listAll(Sort.by("title"));
     }
 
-    // @GET
-    // @Path("{id}")
-    // public Uni<Response> getById(@PathParam("id") Long id) {
-    //     return Movie.findById(id)
-    //         .onItem()
-    //         .transform(movie -> Objects.nonNull(movie) ? Response.ok(movie) : Response.status(Status.NOT_FOUND))
-    //         .onItem()
-    //         .transform(Response.ResponseBuilder::build);
-    // }
+    @GET
+    @Path("{id}")
+    public Uni<Movie> getById(@PathParam("id") Long id) {
+        return Movie.findById(id);
+    }
 
-    // @POST
-    // public Uni<Response> create(Movie movie) {
-    //     return Movie.save(movie)
-    //         .onItem()
-    //         .transform(id -> URI.create(String.format("movies/%s", id)))
-    //         .onItem()
-    //         .transform(uri -> Response.created(uri).build());
-    // }
+    @POST
+    public Uni<Response> create(@NotNull Movie movie) {
+
+        return Panache.withTransaction(movie::persist)
+            .replaceWith(
+                Response.created(URI.create(String.format("movies/%s", movie.getId())))::build
+            );
+
+    }
 
     // @DELETE
     // @Path("{id}")
