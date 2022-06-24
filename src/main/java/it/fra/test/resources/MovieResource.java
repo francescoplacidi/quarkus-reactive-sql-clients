@@ -1,5 +1,6 @@
 package it.fra.test.resources;
 
+import io.quarkus.runtime.StartupEvent;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.URI;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,8 +28,7 @@ public class MovieResource {
     @Inject
     PgPool client;
 
-    @PostConstruct
-    void config() {
+    void config(@Observes StartupEvent ev) {
         initDb();
     }
 

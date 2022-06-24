@@ -1,7 +1,5 @@
 package it.fra.test.models;
 
-import javax.ws.rs.client.Client;
-
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
