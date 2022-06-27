@@ -1,10 +1,17 @@
 quarkus:
   datasource:
     db-kind: postgresql
-    username: user
+    username: postgres
     password: password
     reactive:
-      url: postgresql://localhost:5432/my_db
-  flyway:
-    migrate-at-start: true
-    default-schema: public
+      url: vertx-reactive:postgresql://localhost:5432/my_db
+  hibernate-orm:
+    database:
+      generation:
+        ~: update
+flyway-config:
+  migrate-at-start: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my_db
+    username: postgres
+    password: password
