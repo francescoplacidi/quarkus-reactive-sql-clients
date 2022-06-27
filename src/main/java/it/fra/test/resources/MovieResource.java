@@ -3,17 +3,13 @@ package it.fra.test.resources;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.common.constraint.NotNull;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.pgclient.PgPool;
 import it.fra.test.entities.Movie;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -54,14 +50,16 @@ public class MovieResource {
 
     }
 
-    // @DELETE
-    // @Path("{id}")
-    // public Uni<Response> delete(@PathParam("id") Long id) {
-    //     return Movie.delete(client, id)
-    //         .onItem()
-    //         .transform(deleted -> deleted.booleanValue() ? Status.NO_CONTENT : Status.NOT_FOUND)
-    //         .onItem()
-    //         .transform(status -> Response.status(status).build());
-    // }
+    @DELETE
+    @Path("{id}")
+    public Uni<Response> delete(@PathParam("id") Long id) {
+
+        return
+        Panache.withTransaction(() -> Movie.deleteById(id))
+            .map(deleted -> deleted.booleanValue()
+                ? Response.noContent().build()
+                : Response.status(Status.BAD_REQUEST).build()
+            );
+    }
 
 }
